@@ -35,15 +35,22 @@
         <div class="py-8 md:flex md:space-x-8">
             <!-- Side Nav Bar Starts -->
             <div class="md:basis-1/6 shadow-xl bg-white p-3 rounded-lg max-h-fit">
+                @php
+                $imagePath = "images/blank-profile-picture.png";
+
+                if ($instructor->profile_image_path != NULL){
+                $imagePath = $instructor->profile_image_path;
+                }
+                @endphp
                 <!-- Profile Image Starts -->
                 <div class="relative">
-                    <img id="profileImage" class="w-[100px] h-[100px] rounded-full mx-auto my-3" src="{{ asset('images/blank-profile-picture.png') }}" alt="profile image">
+                    <img id="profileImage" class="w-[100px] h-[100px] rounded-full mx-auto my-3" src="{{ asset($imagePath) }}" alt="profile image">
                     <span class="bottom-0 right-28 md:right-11 absolute">
                         <button type="button" id="profileImageUploadButton" class="py-1 px-2 text-xs text-center text-white bg-blue-700 rounded-full hover:bg-blue-800">
                             <i class="fa-solid fa-camera"></i>
                         </button>
-                        <form method="POST" enctype="multipart/form-data" id="image-upload" action="javascript:void(0)">
-                            <input type="file" id="profileImageInput" accept="image/png, image/jpeg" name="image" hidden />
+                        <form method="post" id="imageUpload" enctype="multipart/form-data">
+                            <input type="file" name="profileImageInput" id="profileImageInput" accept="image/png, image/jpeg" hidden />
                         </form>
                     </span>
                 </div>
@@ -75,8 +82,46 @@
         </div>
     </div>
 
-    @include('includes.footer')
+    <script type="text/javascript">
+        // Open File Upload
+        $('#profileImageUploadButton').click(function() {
+            $('#profileImageInput').trigger('click');
+        });
 
+
+        $(document).ready(function(e) {
+            // On Change 
+            $('#profileImageInput').change(function() {
+                // Change Profile Image 
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    $('#profileImage').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+
+                // Form Data
+                var form = document.getElementById('imageUpload');
+                var formData = new FormData(form);
+
+                $.ajax({
+                    type: 'POST',
+                    url: `{{ route('instructor.profileImage') }}`,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    contentType: false,
+                    processData: false,
+                    success: (response) => {
+
+                        console.log(response.success);
+                    }
+                });
+            });
+        });
+    </script>
+
+    @include('includes.footer')
 </body>
 
 </html>

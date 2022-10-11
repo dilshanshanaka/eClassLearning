@@ -38,7 +38,7 @@ Route::controller(StudentController::class)->middleware(['auth', 'student'])->gr
     Route::get('student/profile', 'profile')->name('student.profile');
     Route::put('update-student', 'updateStudent')->name('student.update');
 
-    Route::put('profile-image', 'uploadProfileImage')->name('student.profileImage');
+    Route::post('profile-image', 'uploadProfileImage')->name('student.profileImage');
 });
 
 // Instructor User Routes
@@ -47,5 +47,5 @@ Route::controller(InstructorController::class)->middleware(['auth', 'instructor'
     Route::get('instructor/profile', 'profile')->name('instructor.profile');
     Route::put('update-instructor', 'updateInstructor')->name('instructor.update');
 
-    // Route::put('profile-image', 'uploadProfileImage')->name('student.profileImage');
+    Route::post('profile-image', 'uploadProfileImage')->name('instructor.profileImage');
 });

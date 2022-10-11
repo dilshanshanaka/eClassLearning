@@ -67,22 +67,26 @@ class StudentController extends Controller
     {
         // Form data Validation
         $validator = Validator::make($request->all(), [
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'profileImageInput' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ]);
 
-        // Return Validation Errors
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
-        }
+        // Upload File Extension
+        $extension = $request->file('profileImageInput')->getClientOriginalExtension();
 
-        $name = $request->file('image')->getClientOriginalName();
-        $request->file('image')->store('public/images');
+        // Rename File
+        $fileName = rand(11111, 999999) . '.' . $extension;
 
-        $path = "public/images/" . $name;
+        // Store in public disk
+        $request->file('profileImageInput')->move(public_path('images/student'), $fileName);
 
+        // Saved Path
+        $path = "images/student/" . $fileName;
+
+        // Update Profile Path
         Student::where('user_id', Auth::id())
             ->update(['profile_image_path' => $path]);
 
-        return response()->json(['success' => $path]);
+        // Return Success
+        return response()->json(['success' => "Profile image upload success."]);
     }
 }

@@ -61,4 +61,32 @@ class InstructorController extends Controller
 
         return response()->json(['message' => "Successfully updated."], 200);
     }
+
+     // Upload Profile Picture
+     public function uploadProfileImage(Request $request)
+     {
+         // Form data Validation
+         $validator = Validator::make($request->all(), [
+             'profileImageInput' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+         ]);
+ 
+         // Upload File Extension
+         $extension = $request->file('profileImageInput')->getClientOriginalExtension();
+ 
+         // Rename File
+         $fileName = rand(11111, 999999) . '.' . $extension;
+ 
+         // Store in public disk
+         $request->file('profileImageInput')->move(public_path('images/instructor'), $fileName);
+ 
+         // Saved Path
+         $path = "images/instructor/" . $fileName;
+ 
+         // Update Profile Path
+         Instructor::where('user_id', Auth::id())
+             ->update(['profile_image_path' => $path]);
+ 
+         // Return Success
+         return response()->json(['success' => "Profile image upload success."]);
+     }
 }
