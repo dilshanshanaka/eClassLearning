@@ -19,6 +19,6 @@ class Admin
         if (auth()->user()->role == "admin") {
             return $next($request);
         }
-        return redirect('home')->with('error', 'You have not an admin user');
+        return redirect('/')->with('error', 'You have not an admin user');
     }
 }

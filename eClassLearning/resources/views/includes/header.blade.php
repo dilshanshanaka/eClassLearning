@@ -12,15 +12,20 @@
         <!-- Primary Nav Starts -->
         <div class="hidden md:flex flex items-center space-x-8">
             <a href="/" class="text-grey-600 hover:text-blue-900">Home</a>
-            <a href="#" class="text-grey-600 hover:text-blue-900">Courses</a>
+            <!-- Course Categories Starts -->
+            <div class="course-categories-dropdown">
+                <x-course-categories-nav-dropdown :mainCategories="$mainCategories" />
+            </div>
+            <!-- Course Categories Ends -->
+
             <a href="about" class="text-grey-600 hover:text-blue-900">About</a>
             <a href="contact" class="text-grey-600 hover:text-blue-900">Contact</a>
         </div>
         <!-- Primary Nav Ends -->
 
         <!-- Secondary Nav Starts -->
+        @guest
         <div class="hidden md:flex flex items-center space-x-8">
-            @guest
             <a href="login">
                 <button hr class="text-blue-700">Login</button>
             </a>
@@ -30,13 +35,23 @@
                     Signup
                 </button>
             </a>
-            @endguest
-            @auth
-            <a href="{{ route('auth.logout') }}">
-                <button hr class="text-blue-700">Logout</button>
-            </a>
-            @endauth
         </div>
+        @endguest
+
+        @auth
+        <div class="hidden md:flex flex items-center space-x-2">
+
+            <x-my-account-button :role="$role" />
+
+            <a href="{{ route('auth.logout') }}">
+                <button class="py-2 px-3 bg-gradient-to-r from-pink-500 to-red-700 text-white rounded-md 
+                        shadow text-sm font-semibold bg hover:from-red-700 hover:to-pink-500 transition duration-300">
+                    Logout
+                </button>
+            </a>
+        </div>
+        @endauth
+
         <!-- Secondary Nav Ends -->
 
         <!-- Mobile Button Starts -->
@@ -56,8 +71,18 @@
         <a href="#" class="block py-2 px-4 text-sm">Course</a>
         <a href="about" class="block py-2 px-4 text-sm">About</a>
         <a href="contact" class="block py-2 px-4 text-sm">Contact</a>
+        @guest
         <a href="login" class="block py-2 px-4 text-sm">Login</a>
         <a href="register" class="block py-2 px-4 text-sm">Signup</a>
+        @endguest
+
+        @auth
+        @php
+        $dashboardRoute = $role.".dashboard";
+        @endphp
+        <a href="{{ route($dashboardRoute) }}" class="block py-2 px-4 text-sm">My Account</a>
+        <a href="{{ route('auth.logout') }}" class="block py-2 px-4 text-sm">Logout</a>
+        @endauth
     </div>
     <!-- Mobile Menu Ends -->
 

@@ -19,6 +19,6 @@ class Student
         if (auth()->user()->role == "student") {
             return $next($request);
         }
-        return redirect('home')->with('error', 'You have not a student user');
+        return redirect('/')->with('error', 'You have not a student user');
     }
 }

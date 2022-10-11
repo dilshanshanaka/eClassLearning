@@ -130,7 +130,7 @@ class AuthController extends Controller
         $user = User::where("email", $request->email)->first();
 
         // Email Not Found
-        if ($user == NULL){
+        if ($user == NULL) {
             return response()->json(['credentials' => "email"], 200);
         }
 
@@ -145,7 +145,7 @@ class AuthController extends Controller
         }
     }
 
-
+    // Logout 
     public function logout(Request $request)
     {
         Auth::logout();
@@ -154,5 +154,38 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+
+    // Change Password
+    public function changePassword(Request $request)
+    {
+
+        // Check For Email Account
+        $user = User::where("id", Auth::id())->first();
+
+        // Password Check
+        if (!Hash::check($request->currentPassword, $user->password)) {
+            return response()->json(['credentials' => "password"], 200);
+        }
+
+        // Form data Validation
+        $validator = Validator::make($request->all(), [
+            'newPassword'  => ['required', 'string', 'min:6', 'max:20']
+        ]);
+
+        // Return Validation Errors
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        // Hash Password
+        $hashedPassword = Hash::make($request->newPassword);
+
+        $user = User::find(Auth::id());
+        $user->password = $hashedPassword;
+        $user->save();
+
+        return response()->json(['message' => "Successfully changed."], 200);
     }
 }

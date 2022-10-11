@@ -74,4 +74,14 @@
     btn.addEventListener("click", () => {
         menu.classList.toggle("hidden");
     });
+
+    const dropdown = document.querySelector("button.drop-down-button");
+    const dropdownList = document.querySelector(".dropdown-list");
+
+    dropdown.addEventListener("click", () => {
+        dropdownList.classList.toggle("hidden");
+    });
+
+    
+
 </script>

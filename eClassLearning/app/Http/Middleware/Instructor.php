@@ -19,6 +19,6 @@ class Instructor
         if (auth()->user()->role == "instructor") {
             return $next($request);
         }
-        return redirect('home')->with('error', 'You have not an instructor user');
+        return redirect('/')->with('error', 'You have not an instructor user');
     }
 }
