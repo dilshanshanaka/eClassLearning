@@ -13,4 +13,12 @@ class CategoryController extends Controller
 
         dd($mainCategories);
     }
+
+    // Sub Categories
+    public function subCategories($mainCategoryId)
+    {
+        $subCategories = MainCategory::find($mainCategoryId)->subCategories;
+
+        return response()->json(['subCategories' => $subCategories], 200);
+    }
 }

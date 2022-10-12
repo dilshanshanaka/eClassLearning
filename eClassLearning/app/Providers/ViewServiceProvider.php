@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\MainCategory;
+use App\Models\Instructor;
 use Illuminate\Support\Facades\Auth;
 
 class ViewServiceProvider extends ServiceProvider
@@ -30,7 +31,7 @@ class ViewServiceProvider extends ServiceProvider
             $mainCategories->with('mainCategories', MainCategory::all());
         });
 
-
+        // Role
         View::composer('includes.header', function ($role) {
             // Check User Logged In
             if(Auth::check()){
@@ -41,5 +42,6 @@ class ViewServiceProvider extends ServiceProvider
 
             $role->with('role', $userRole);
         });
+
     }
 }

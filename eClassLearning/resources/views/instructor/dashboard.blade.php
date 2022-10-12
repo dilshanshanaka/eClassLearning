@@ -1,15 +1,21 @@
 @extends('layouts.instructor')
 
-@php 
+@php
 
-$title = "dashboard"; 
+$title = "dashboard";
 
 @endphp
 
 @section('content')
 <!-- Content Starts -->
 
-    <h4>Instructor Dashboard</h4>
+
+
+<div class="my-10">
+@foreach ($courses as $course)
+<h4>{{ $course->subCategory->title }}</h4>
+@endforeach
+</div>
 
 <!-- Content Ends -->
 @endsection

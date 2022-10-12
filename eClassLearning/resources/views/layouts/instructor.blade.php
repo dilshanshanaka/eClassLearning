@@ -1,6 +1,6 @@
-<!doctype html>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
+    
 @include('includes.head')
 
 <body>
@@ -68,9 +68,11 @@
                         <a href="{{ route('instructor.profile') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'profile') bg-sky-100 @endif"><i class="fa-regular fa-user"></i>&emsp;Profile</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'courses') bg-sky-100 @endif"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</a>
+                        <a href="{{ route('instructor.courses') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'courses') bg-sky-100 @endif"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</a>
                     </li>
-
+                    <li>
+                        <a href="{{ route('instructor.newcourse') }}" class="block py-2 md:pl-10 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'add new course') bg-sky-100 @endif"> Add new Course</a>
+                    </li>
                 </ul>
             </div>
             <!-- Side Nav Bar Ends -->
