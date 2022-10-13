@@ -83,7 +83,7 @@ $title = "course";
                         shadow font-semibold bg hover:from-emerald-700 hover:to-emerald-500">
             New Module
         </a>
-        <a type="button" href="" type="button" class="text-center text-sm p-2 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white rounded-md 
+        <a type="button" href="{{ route('instructor.newquiz', $course->id) }}" type="button" class="text-center text-sm p-2 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-emerald-700 hover:to-emerald-500">
             Add Final Quiz
         </a>
@@ -97,7 +97,7 @@ $title = "course";
             <li class="mb-10 ml-4">
                 <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
                 <time class="mb-1 text-sm font-normal leading-none text-gray-400">Module {{ $module->module_no }}</time>
-                <h3 class="text-lg font-semibold text-gray-900">{{ $module->title }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ $module->title }} {{ $module->quiz->type }}</h3>
 
                 <h3 class="ml-8 text-gray-600 text-justify md:w-2/3">{{ $module->description }}</h3>
 
@@ -106,7 +106,7 @@ $title = "course";
                         shadow font-semibold bg hover:from-blue-700 hover:to-blue-500">
                         Edit Lesson
                     </a>
-                    <a type="button" href="" type="button" class="text-center text-sm p-2 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white rounded-md 
+                    <a type="button" href="{{ route('instructor.newquiz', ['courseId'=>$course->id, 'moduleNo'=> $module->id]) }}" type="button" class="text-center text-sm p-2 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-emerald-700 hover:to-emerald-500">
                         Add Quiz
                     </a>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Instructor;
 use App\Models\Module;
+use App\Models\QuestionAnswer;
+use App\Models\Quiz;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -14,8 +16,13 @@ class CourseController extends Controller
     // Public Course View
     public function publicCourse($courseId)
     {
-        $course = Course::where('id', $courseId)->first();
+        $course = Course::where('id', $courseId)
+            ->where('status', 'published')
+            ->first();
 
+        if ($course == null) {
+            return abort(404);
+        }
         // return response()->json(['course' => $course], 200);
 
         return view('course', compact('course'));
@@ -162,5 +169,33 @@ class CourseController extends Controller
 
         // Return Success
         return response()->json(['success' => "Successfully updated."]);
+    }
+
+    // Create Quiz
+    public function createQuiz(Request $request)
+    {
+
+        // Create New Quiz
+        $quiz = new Quiz;
+        $quiz->type = $request->type;
+        $quiz->course_id = $request->courseId;
+        $quiz->module_id = $request->moduleNo;
+        $quiz->save();
+
+
+        // Insert Question and Answers
+        foreach ($request->quizItems as $quizItem) {
+            $qa = new QuestionAnswer;
+            $qa->question = $quizItem['question'];
+            $qa->answer_one = $quizItem['answerOne'];
+            $qa->answer_two = $quizItem['answerTwo'];
+            $qa->answer_three = $quizItem['answerThree'];
+            $qa->answer_four = $quizItem['answerFour'];
+            $qa->correct_answer_no = $quizItem['correctAnswer'];
+            $qa->quiz_id = $quiz->id;
+            $qa->save();
+        }
+
+        return response()->json(['success' => 'Quiz added successfully.'], 200);
     }
 }

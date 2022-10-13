@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
@@ -9,10 +10,6 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\IndexController;
 
 
-
-Route::get('admin', function () {
-    return view('admin.dashboard');
-});
 
 // Home Route
 Route::get('/', [IndexController::class, 'index']);
@@ -50,13 +47,14 @@ Route::controller(StudentController::class)->middleware(['auth', 'student'])->gr
 Route::controller(InstructorController::class)->middleware(['auth', 'instructor'])->group(function () {
     // Views
     Route::get('instructor/dashboard', 'dashboard')->name('instructor.dashboard');
-    Route::get('instructor/profile', 'profile')->name('instructor.profile');
+    Route::get('instructor/profile', 'profile')->name('instructor.profile');   
     Route::get('instructor/courses', 'courses')->name('instructor.courses');
     Route::get('instructor/courses/add-new-course', 'addNewCourseView')->name('instructor.newcourse');
     Route::get('instructor/course/{courseId}', 'course')->name('instructor.course');
     Route::get('instructor/course/edit/{courseId}', 'editCourseView')->name('instructor.editcourse');
     Route::get('instructor/course/{courseId}/new-module', 'createModuleView')->name('instructor.newmodule');
     Route::get('instructor/course/{courseId}/edit-module/{moduleId}', 'updateModuleView')->name('instructor.editmodule');
+    Route::get('instructor/course/{courseId}/new-quiz/{moduleNo?}', 'createQuizView')->name('instructor.newquiz');
 
 
     // Functions
@@ -71,4 +69,22 @@ Route::controller(CourseController::class)->middleware(['auth', 'instructor'])->
     Route::patch('update-course', 'updateCourse')->name('instructor.course.update');
     Route::post('add-new-module', 'createModule')->name('instructor.course.module.create');
     Route::put('update-module', 'updateModule')->name('instructor.course.module.update');
+    Route::post('add-new-quiz', 'createQuiz')->name('instructor.course.quiz.create');
+
+});
+
+
+// Admin User Routes
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/dashboard', 'dashboard')->name('admin.dashboard');
+    Route::get('/admin/users', 'allUsers')->name('admin.users');
+    Route::get('/admin/users/students', 'students')->name('admin.users.students');
+    Route::get('/admin/users/instructors', 'instructors')->name('admin.users.instructors');
+    Route::get('/admin/courses', 'courses')->name('admin.courses');
+
+
+    // Functions
+    Route::patch('change-user-status', 'manageUserStatus')->name('admin.user.changestatus');
+    Route::patch('change-user-verification', 'changeInstructorVerification')->name('admin.user.changeverification');
+    Route::patch('change-course-status', 'changeCourseStatus')->name('admin.course.changestatus');
 });

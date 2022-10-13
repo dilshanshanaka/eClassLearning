@@ -147,9 +147,16 @@ class InstructorController extends Controller
     }
 
     // Create New Quiz
-    public function createQuiz()
+    public function createQuizView($courseId, $moduleNo = null)
     {
-        //
+        // Instructor Details
+        $instructor = Instructor::where('user_id', Auth::id())->first();
+        $email = Auth::user()->email;
+
+        $course = Course::where('id', $courseId)->first();
+        $module = Module::where('course_id', $courseId)->latest()->first();
+
+        return view('instructor.new-quiz', compact('email', 'instructor', 'course', 'moduleNo'));
     }
 
 
@@ -183,6 +190,8 @@ class InstructorController extends Controller
         $modules = Module::where('course_id', $courseId)->orderBy('module_no')->get();
 
         $course = Course::where('id', $courseId)->first();
+
+        return dd($modules);
 
         return view('instructor.course', compact('instructor', 'email', 'course', 'modules'));
     }
