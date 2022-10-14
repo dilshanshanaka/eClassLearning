@@ -26,10 +26,10 @@
         <!-- Secondary Nav Starts -->
         @guest
         <div class="hidden md:flex flex items-center space-x-8">
-            <a href="login">
+            <a href="{{ route('login') }}">
                 <button hr class="text-blue-700">Login</button>
             </a>
-            <a href="register">
+            <a href="{{ route('register') }}">
                 <button class="py-2 px-3 bg-gradient-to-r from-blue-400 to-blue-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-blue-700 hover:to-blue-400 transition duration-300">
                     Signup

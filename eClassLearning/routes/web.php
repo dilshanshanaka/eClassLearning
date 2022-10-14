@@ -11,19 +11,24 @@ use App\Http\Controllers\IndexController;
 
 
 
-// Home Route
+// Public Routes
 Route::get('/', [IndexController::class, 'index']);
-
 Route::get('/course/{id}', [CourseController::class, 'publicCourse']);
-
 Route::get('/sub-categories/{id}', [CategoryController::class, 'subCategories']);
+Route::get('/courses/main-category/{id}', [CategoryController::class, 'courseByMainCategory'])->name('courses.maincategory');
+Route::get(
+    '/courses/main-category/{mainCategoryId}/sub-category/{subCategoryId}',
+    [CategoryController::class, 'courseBySubCategory']
+)->name('courses.subcategory');
+Route::post('/courses/search', [IndexController::class, 'search'])->name('courses.search');
 
 
 // Guest Users Auth Routes
 Route::controller(AuthController::class)->middleware(['guest'])->group(function () {
-    Route::get('login', 'loginIndex')->name('login');
-    Route::get('register', 'registerIndex')->name('register');
+    Route::get('/login', 'loginIndex')->name('login');
+    Route::get('/register', 'registerIndex')->name('register');
 
+    // Functions
     Route::post('create-new-user', 'store')->name('auth.register');
     Route::post('login', 'login')->name('auth.login');
 });
@@ -47,7 +52,7 @@ Route::controller(StudentController::class)->middleware(['auth', 'student'])->gr
 Route::controller(InstructorController::class)->middleware(['auth', 'instructor'])->group(function () {
     // Views
     Route::get('instructor/dashboard', 'dashboard')->name('instructor.dashboard');
-    Route::get('instructor/profile', 'profile')->name('instructor.profile');   
+    Route::get('instructor/profile', 'profile')->name('instructor.profile');
     Route::get('instructor/courses', 'courses')->name('instructor.courses');
     Route::get('instructor/courses/add-new-course', 'addNewCourseView')->name('instructor.newcourse');
     Route::get('instructor/course/{courseId}', 'course')->name('instructor.course');
@@ -60,7 +65,6 @@ Route::controller(InstructorController::class)->middleware(['auth', 'instructor'
     // Functions
     Route::put('update-instructor', 'updateInstructor')->name('instructor.update');
     Route::post('profile-image', 'uploadProfileImage')->name('instructor.profileImage');
-    
 });
 
 // Instructor Course Function Routes
@@ -70,7 +74,6 @@ Route::controller(CourseController::class)->middleware(['auth', 'instructor'])->
     Route::post('add-new-module', 'createModule')->name('instructor.course.module.create');
     Route::put('update-module', 'updateModule')->name('instructor.course.module.update');
     Route::post('add-new-quiz', 'createQuiz')->name('instructor.course.quiz.create');
-
 });
 
 

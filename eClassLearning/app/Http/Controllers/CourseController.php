@@ -198,4 +198,5 @@ class CourseController extends Controller
 
         return response()->json(['success' => 'Quiz added successfully.'], 200);
     }
+    
 }

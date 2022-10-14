@@ -12,7 +12,7 @@
     <ul class="py-1 text-sm text-gray-700" aria-labelledby="categoriesDropdown">
         @foreach ($mainCategories as $mainCategory)
         <li>
-            <a href="#" class="block py-2 px-1 hover:bg-gray-100">{{ $mainCategory->title }}</a>
+            <a href="{{ route('courses.maincategory', $mainCategory->id) }}" class="block py-2 px-1 hover:bg-gray-100">{{ $mainCategory->title }}</a>
         </li>
         @endforeach
     </ul>

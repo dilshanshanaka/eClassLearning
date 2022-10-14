@@ -18,11 +18,14 @@
 
                 <form>
                     <div class="flex space-x-4 mt-6">
-                        <input type="text" class="basis-1/2 border-slate-200 drop-shadow-lg rounded-md px-3" placeholder="Advanced Level ICT">
-                        <button class="py-2 px-3 bg-gradient-to-r from-pink-400 to-indigo-700 text-white rounded-md 
+                        <form action="{{ route('courses.search') }}" method="POST">
+                            @csrf
+                            <input type="text" name="term" class="basis-1/2 border-slate-200 drop-shadow-lg rounded-md px-3" placeholder="Advanced Level ICT">
+                            <button type="submit" class="py-2 px-3 bg-gradient-to-r from-pink-400 to-indigo-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-indigo-700 hover:to-pink-400 transition duration-300">
-                            Search Course
-                        </button>
+                                Search Course
+                            </button>
+                        </form>
                     </div>
 
                 </form>
