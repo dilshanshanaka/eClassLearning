@@ -13,57 +13,20 @@
             </a>
             <ul class="space-y-2 mt-6">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg @if($page == 'dashboard') bg-blue-200 @endif  hover:bg-blue-200">
+                    <a href="{{ route('course-verifier.dashboard') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg @if($page == 'dashboard') bg-blue-200 @endif  hover:bg-blue-200">
                         <span class="ml-3"><i class="fa-solid fa-table-columns"></i>&emsp;Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="users-list flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
-                        <span class="ml-3"><i class="fa-solid fa-users"></i>&emsp;Users&emsp;<i class="fa-solid fa-angle-down"></i></span>
-                    </a>
-                    @php
-                    if($page == 'users' || $page == 'students' || $page == 'instructors'){
-                    $listHiddenClass = '';
-                    }else{
-                    $listHiddenClass = 'hidden';
-                    }
-                    @endphp
-                    <ul id="dropdownList" class="dropdown-user-list {{ $listHiddenClass }} py-2 space-y-2">
-                        <li>
-                            <a href="{{ route('admin.users') }}" class="flex items-center p-1 pl-14 w-full text-base font-normal text-gray-800 rounded-lg group hover:bg-blue-200 @if($page == 'users') bg-blue-200 @endif">All Users</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.users.students') }}" class="flex items-center p-1 pl-14 w-full text-base font-normal text-gray-800 rounded-lg group hover:bg-blue-200 @if($page == 'students') bg-blue-200 @endif">Students</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.users.instructors') }}" class="flex items-center p-1 pl-14 w-full text-base font-normal text-gray-800 rounded-lg group hover:bg-blue-200 @if($page == 'instructors') bg-blue-200 @endif">Instructors</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.users.course-verifiers') }}" class="flex items-center p-1 pl-14 w-full text-base font-normal text-gray-800 rounded-lg group hover:bg-blue-200 @if($page == 'course verifiers') bg-blue-200 @endif">Course Verifiers</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="{{ route('admin.courses') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                    <a href="{{ route('course-verifier.change-password') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
                         <span class="ml-3"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
-                        <span class="ml-3"><i class="fa-solid fa-table-list"></i>&emsp;Appointments</span>
+                    <a href="{{ route('course-verifier.change-password') }}" class="@if($page == 'change password') bg-blue-200 @endif flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                        <span class="ml-3"><i class="fa-solid fa-user"></i>&emsp;Change Password</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
-                        <span class="ml-3"><i class="fa-solid fa-file-invoice"></i>&emsp;Purchases</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
-                        <span class="ml-3"><i class="fa-solid fa-money-check"></i>&emsp;Withdrawals</span>
-                    </a>
-                </li>
-
                 <li>
                     <a href="{{ route('auth.logout') }}" class="flex items-center p-2 text-base font-normal text-white-800 rounded-lg bg-red-100 hover:bg-red-200">
                         <span class="ml-3"><i class="fa-solid fa-right-from-bracket"></i>&emsp;Logout</span>
@@ -83,7 +46,7 @@
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <span class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                        <i class="fa-solid fa-house-user"></i>&emsp;Admin
+                        <i class="fa-solid fa-house-user"></i>&emsp;Course verifer
                     </span>
                 </li>
                 @if($basePage != NULL)

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseVerifierController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\IndexController;
@@ -83,11 +84,20 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/users', 'allUsers')->name('admin.users');
     Route::get('/admin/users/students', 'students')->name('admin.users.students');
     Route::get('/admin/users/instructors', 'instructors')->name('admin.users.instructors');
+    Route::get('/admin/users/course-verifiers', 'courseVerifiers')->name('admin.users.course-verifiers');
     Route::get('/admin/courses', 'courses')->name('admin.courses');
+    Route::view('/admin/users/add-new-course-verifer', 'admin.add-course-verifier')->name('admin.users.add-course-verifiers');
+    Route::get('/admin/users/edit/course-verifer/{courseVerifierId}', 'updateCourseVerifierView')->name('admin.users.edit-course-verifiers');
 
 
     // Functions
+    Route::post('add-new-course-verifer', 'createCourseVerifier')->name('admin.user.course-verifier.create');
+    Route::patch('update-course-verifer', 'updateCourseVerifier')->name('admin.user.course-verifier.update');
     Route::patch('change-user-status', 'manageUserStatus')->name('admin.user.changestatus');
     Route::patch('change-user-verification', 'changeInstructorVerification')->name('admin.user.changeverification');
     Route::patch('change-course-status', 'changeCourseStatus')->name('admin.course.changestatus');
 });
+
+
+Route::get('/course-verifer/dashboard', [CourseVerifierController::class, 'dashboard'])->name('course-verifier.dashboard');
+Route::get('/course-verifer/change-password', [CourseVerifierController::class, 'changePasswordView'])->name('course-verifier.change-password');

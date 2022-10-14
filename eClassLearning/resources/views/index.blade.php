@@ -175,6 +175,18 @@
         <!-- Popular Courses Starts -->
         <h4 class="text-center font-bold text-lg text-violet-800">INSTRUCTORS</h4>
         <h2 class="text-center font-bold text-4xl text-gray-800 mt-3">Top Instructors</h2>
+
+        <div class="mt-14 flex space-x-6 md:max-w-6xl mx-auto">
+            <!-- Single Instructors Starts -->
+            <div class="basis-1/2 md:basis-1/6 w-full max-w-sm">
+                <a href="#">
+                    <img class="rounded-full w-full" src="{{ asset('images/web-dev.jpg') }}" alt="course image">
+                </a>
+
+                <h4 class="mt-4 text-center font-bold text-xl text-gray-700">John Doe</h4>
+            </div>
+            <!-- Single Instructors Ends -->
+        </div>
     </div>
 
 </div>

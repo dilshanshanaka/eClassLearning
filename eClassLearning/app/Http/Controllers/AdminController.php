@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseVerifier;
 use App\Models\Instructor;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule as ValidationRule;
+
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -54,6 +59,97 @@ class AdminController extends Controller
         return view('admin.instructors', compact('instructors', 'totalInstructors'));
     }
 
+    // Get All Course Verifiers
+    public function courseVerifiers()
+    {
+        $courseVerifiers = DB::table('course_verifiers')
+            ->join('users', 'course_verifiers.user_id', '=', 'users.id')
+            ->select('course_verifiers.*', 'users.email', 'users.role', 'users.status')
+            ->paginate(3);
+
+        $totalCourseVerifiers = CourseVerifier::count();
+
+        return view('admin.course-verifier', compact('courseVerifiers', 'totalCourseVerifiers'));
+    }
+
+    // Craete New Course Verifier
+    public function createCourseVerifier(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => ['required', 'string', 'max:60'],
+            'lastName'  => ['required', 'string', 'max:60'],
+            'email'     => ['required', 'string', 'max:100', ValidationRule::unique('users')],
+            'password'  => ['required', 'string', 'min:6', 'max:20'],
+            'mobile' => ['required', 'string', 'max:20'],
+            'qualification' => ['required', 'string', 'max:20']
+        ]);
+
+        // Return Validation Errors
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        // Hash Password
+        $hashedPassword = Hash::make($request->password);
+
+        // Create New User
+        $user = new User;
+        $user->email = $request->email;
+        $user->password = $hashedPassword;
+        $user->role = "course verifier";
+        $user->status = true;
+        $user->save();
+
+        // Create New Student
+        $courseVerifier = new CourseVerifier;
+        $courseVerifier->first_name = $request->firstName;
+        $courseVerifier->last_name = $request->lastName;
+        $courseVerifier->mobile = $request->mobile;
+        $courseVerifier->highest_education = $request->qualification;
+        $courseVerifier->user_id = $user->id;
+        $courseVerifier->save();
+
+        return response()->json(['success' => 'success'], 200);
+    }
+
+    // Update Course Verifier View
+    public function updateCourseVerifierView($courseVerifierId)
+    {
+        $courseVerifier = CourseVerifier::where('id', $courseVerifierId)->first();
+
+        $courseVerifierUserId = $courseVerifier->user_id;
+
+        $userEmail = User::select('email')->where('id', $courseVerifierUserId)->first();
+
+        return view('admin.edit-course-verifier', compact('courseVerifier', 'userEmail'));
+    }
+
+
+    // Update Course Verifier Function
+    public function updateCourseVerifier(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => ['required', 'string', 'max:60'],
+            'lastName'  => ['required', 'string', 'max:60'],
+            'mobile' => ['required', 'string', 'max:20'],
+            'qualification' => ['required', 'string', 'max:20']
+        ]);
+
+        // Return Validation Errors
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        CourseVerifier::where('id', $request->id)->update([
+            'first_name' => $request->firstName, 'last_name' => $request->lastName,
+            'mobile' => $request->mobile, 'highest_education' => $request->qualification
+        ]);
+
+        return response()->json(['success' => 'success'], 200);
+
+    }
+
+    
     // Change User Status
     public function manageUserStatus(Request $request)
     {
