@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\CourseVerifier;
 use App\Models\Instructor;
+use App\Models\Purchase;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +21,15 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $totalCourses = DB::table('courses')->count();
+        $totalStudents = DB::table('students')->count();
+        $totalInstructors = DB::table('instructors')->count();
+        $totalSales = DB::table('purchases')->sum('amount');
+
+        $purchases = Purchase::latest()->limit(2)->get();
+        $courses = Course::latest()->limit(2)->get();
+
+        return view('admin.dashboard', compact('totalCourses', 'totalStudents', 'totalInstructors', 'totalSales', 'purchases', 'courses'));
     }
 
     // Get All Users
@@ -216,5 +226,53 @@ class AdminController extends Controller
             ]);
 
         return response()->json(['data' => "Success"], 200);
+    }
+
+    // Purchases 
+    public function purchases()
+    {
+        $purchases = Purchase::latest()->paginate(15);
+
+        $sales = DB::table('purchases')->sum('amount');
+        $profit = $sales * 10/100;
+        
+
+        return view('admin.purchases', compact('purchases', 'profit', 'sales'));
+    }
+
+
+    // Withdrawals
+    public function withdrawals()
+    {
+        $withdrawals = DB::table('withdrawals')
+        ->join('instructors', 'withdrawals.instructor_id', '=', 'instructors.id')
+        ->select('withdrawals.*', 'instructors.first_name', 'instructors.last_name', 'instructors.id as instructorId', 'instructors.mobile')
+        ->latest()->paginate(10);
+
+        return view('admin.withdrawals', compact('withdrawals'));
+    }
+
+    // Withdrawals accept
+    public function acceptWithdrawRequest(Request $request)
+    {
+        Withdraw::where('id', $request->withdrawId)
+            ->update([
+                'status' => "$request->status"
+            ]);
+
+        return response()->json(['data' => "Success"], 200);
+    }
+
+    // All Appointments
+    public function allAppointments()
+    {
+        $appointments = DB::table('appointments')
+        ->join('instructors', 'appointments.instructor_id', '=', 'instructors.id')
+        ->join('students', 'appointments.student_id', '=', 'students.id')
+        ->select('appointments.*', 'instructors.first_name as instructor_first_name', 'instructors.last_name as instructor_last_name', 
+        'students.first_name as student_first_name', 'students.last_name as student_last_name')
+        ->latest()->paginate(10);
+
+        return view('admin.appointments', compact('appointments'));
     }
 }

@@ -97,7 +97,7 @@ $title = "course";
             <li class="mb-10 ml-4">
                 <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
                 <time class="mb-1 text-sm font-normal leading-none text-gray-400">Module {{ $module->module_no }}</time>
-                <h3 class="text-lg font-semibold text-gray-900">{{ $module->title }} {{ $module->quiz->type }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ $module->title }}</h3>
 
                 <h3 class="ml-8 text-gray-600 text-justify md:w-2/3">{{ $module->description }}</h3>
 

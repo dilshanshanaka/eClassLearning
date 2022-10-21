@@ -17,7 +17,7 @@ class CourseController extends Controller
     public function publicCourse($courseId)
     {
         $course = Course::where('id', $courseId)
-            ->where('status', 'published')
+            ->where('status', 'pending')
             ->first();
 
         if ($course == null) {

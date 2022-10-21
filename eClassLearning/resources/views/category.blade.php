@@ -86,9 +86,22 @@
                             <h6 class="text-sm text-gray-500 text-center mt-2">{{ $course->main_category }} > {{ $course->sub_category }}</h6>
 
                             <div class="grid gap-6 my-2 md:grid-cols-2">
-                                <div class="flex items-center justify-center float-left">
+                                <div class="flex items-center justify-center float-left text-yellow-600">
 
-                                    <span class="text-sm font-mono text-gray-400">(12)</span>
+                                    @php $stars = round($course->stars); @endphp
+
+                                    @for($i=0; $i < 5; $i++) @php if($stars> 0){
+
+                                        @endphp
+                                        <i class="fa-solid fa-star"></i>
+                                        @php $stars--;
+                                        }else{
+                                        @endphp
+
+                                        <i class="fa-regular fa-star"></i>
+                                        @php } @endphp
+                                        @endfor
+
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900 text-right">LKR {{ number_format($course->price, 2, ',', '.')  }}</h3>
                             </div>
@@ -104,10 +117,10 @@
                             </div>
 
                             <div class="flex items-center mt-3">
-                                <button id="loginSubmit" type="button" class="py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
+                                <a href="/course/{{ $course->id }}" type="button" class="text-center py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-blue-700 hover:to-sky-400 transition duration-300 w-full">
                                     View
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

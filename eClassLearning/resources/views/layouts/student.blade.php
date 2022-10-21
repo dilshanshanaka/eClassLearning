@@ -68,7 +68,16 @@
                         <a href="{{ route('student.profile') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'profile') bg-sky-100 @endif"><i class="fa-regular fa-user"></i>&emsp;Profile</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'courses') bg-sky-100 @endif"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</a>
+                        <a href="{{ route('student.courses') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'courses') bg-sky-100 @endif"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('student.appointments') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'appointments') bg-sky-100 @endif"><i class="fa-solid fa-calendar-check"></i>&emsp;Appointments</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('student.questions') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'questions') bg-sky-100 @endif"><i class="fa-solid fa-person-circle-question"></i>&emsp;Questions</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('student.purchases') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'purchases') bg-sky-100 @endif"><i class="fa-solid fa-wallet"></i>&emsp;Purchases</a>
                     </li>
 
                 </ul>

@@ -44,22 +44,22 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ route('admin.courses') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                    <a href="{{ route('admin.courses') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200 @if($page == 'courses') bg-blue-200 @endif">
                         <span class="ml-3"><i class="fa-solid fa-graduation-cap"></i>&emsp;Courses</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                    <a href="{{ route('admin.appointments') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200 @if($page == 'appointments') bg-blue-200 @endif">
                         <span class="ml-3"><i class="fa-solid fa-table-list"></i>&emsp;Appointments</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                    <a href="{{ route('admin.purchases') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200 @if($page == 'purchases') bg-blue-200 @endif">
                         <span class="ml-3"><i class="fa-solid fa-file-invoice"></i>&emsp;Purchases</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200">
+                    <a href="{{ route('admin.withdrawals') }}" class="flex items-center p-2 text-base font-normal text-gray-800 rounded-lg hover:bg-blue-200 @if($page == 'withdrawals') bg-blue-200 @endif">
                         <span class="ml-3"><i class="fa-solid fa-money-check"></i>&emsp;Withdrawals</span>
                     </a>
                 </li>

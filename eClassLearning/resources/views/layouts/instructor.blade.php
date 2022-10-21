@@ -73,6 +73,15 @@
                     <li>
                         <a href="{{ route('instructor.newcourse') }}" class="block py-2 md:pl-10 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'add new course') bg-sky-100 @endif"> Add new Course</a>
                     </li>
+                    <li>
+                        <a href="{{ route('instructor.appointments') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'appointments') bg-sky-100 @endif"><i class="fa-solid fa-calendar-check"></i>&emsp;Appointments</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('instructor.questions') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'questions') bg-sky-100 @endif"><i class="fa-solid fa-person-circle-question"></i>&emsp;Questions</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('instructor.withdraw') }}" class="block py-2 px-2 rounded hover:bg-blue-100 my-1 @if($title === 'withdraw') bg-sky-100 @endif"><i class="fa-solid fa-wallet"></i>&emsp;Withdraw</a>
+                    </li>
                 </ul>
             </div>
             <!-- Side Nav Bar Ends -->
