@@ -15,6 +15,7 @@ use App\Http\Controllers\IndexController;
 // Public Routes
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/course/{id}', [CourseController::class, 'publicCourse']);
+Route::get('/course/title/{title}', [CourseController::class, 'apiCourse']);
 Route::get('/public/instructor/{id}', [InstructorController::class, 'publicInstructor']);
 Route::get('instructor-appointment/{id}', [InstructorController::class, 'appointmentAvailability'])->name('appointment.availability');
 Route::get('/sub-categories/{id}', [CategoryController::class, 'subCategories']);
@@ -106,7 +107,7 @@ Route::controller(CourseController::class)->middleware(['auth', 'instructor'])->
 
 
 // Admin User Routes
-Route::controller(AdminController::class)->group(function () {
+Route::controller(AdminController::class)->middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', 'dashboard')->name('admin.dashboard');
     Route::get('/admin/users', 'allUsers')->name('admin.users');
     Route::get('/admin/purchases', 'purchases')->name('admin.purchases');

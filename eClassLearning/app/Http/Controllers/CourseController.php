@@ -7,25 +7,56 @@ use App\Models\Instructor;
 use App\Models\Module;
 use App\Models\QuestionAnswer;
 use App\Models\Quiz;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CourseController extends Controller
 {
     // Public Course View
     public function publicCourse($courseId)
     {
-        $course = Course::where('id', $courseId)
-            ->where('status', 'pending')
-            ->first();
+
+        $course = DB::table('courses')
+            ->join('instructors', 'courses.instructor_id', '=', 'instructors.id')
+            ->join('sub_categories', 'courses.sub_category_id', '=', 'sub_categories.id')
+            ->join('main_categories', 'sub_categories.main_category_id', '=', 'main_categories.id')
+            ->leftJoin('reviews', 'courses.id', '=', 'reviews.course_id')
+            ->select(
+                DB::raw('avg(reviews.stars) as stars'),
+                'courses.*',
+                'instructors.first_name',
+                'instructors.last_name',
+                'sub_categories.title as sub_category',
+                'main_categories.title as main_category'
+            )->groupBy('courses.id')->where('courses.id', $courseId)->first();
+
 
         if ($course == null) {
             return abort(404);
         }
-        // return response()->json(['course' => $course], 200);
 
-        return view('course', compact('course'));
+        $modules = Module::where('course_id', $courseId)->orderBy('module_no')->get();
+
+        return view('course', compact('course', 'modules'));
+    }
+
+    // GET Course Data in JSON
+    public function apiCourse($courseTitle)
+    {
+        $course = DB::table('courses')
+            ->join('sub_categories', 'courses.sub_category_id', '=', 'sub_categories.id')
+            ->join('main_categories', 'sub_categories.main_category_id', '=', 'main_categories.id')
+            ->select(
+                'courses.*',
+                'sub_categories.title as sub_category',
+                'main_categories.title as main_category'
+            )->where('courses.title', $courseTitle)->first();
+
+        return response()->json($course);
     }
 
     // Create New Course
@@ -198,5 +229,4 @@ class CourseController extends Controller
 
         return response()->json(['success' => 'Quiz added successfully.'], 200);
     }
-    
 }

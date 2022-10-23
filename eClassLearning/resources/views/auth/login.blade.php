@@ -94,6 +94,8 @@
                     window.location.href="{{ route('student.dashboard') }}";
                 } else if (role == "instructor") {
                     window.location.href="{{ route('instructor.dashboard') }}";
+                }else if (role == "admin"){
+                    window.location.href="{{ route('admin.dashboard') }}";
                 }
             }
         });

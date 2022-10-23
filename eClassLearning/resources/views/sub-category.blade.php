@@ -79,10 +79,10 @@
 
         <div class="basis-full">
             <div class="courses">
-                <div class="flex space-x-6">
+                <div class="grid gap-6 my-2 md:grid-cols-4">
                     @foreach($courses as $course)
                     <!-- Single Course Starts -->
-                    <div class="basis-1/3 w-full max-w-sm bg-white rounded-xl shadow-lg">
+                    <div class="w-full max-w-sm bg-white rounded-xl shadow-lg">
                         <a href="#">
                             <img class="rounded-t-lg h-36 w-full" src="{{ asset($course->image_path) }}" alt="course image">
                         </a>
@@ -91,18 +91,31 @@
                                 <h5 class="text-md font-bold tracking-tight text-gray-900">{{ $course->title }}</h5>
                             </a>
 
-                            <h6 class="text-sm text-gray-500 text-center mt-2">{{ $course->main_category }} > {{ $course->sub_category }}</h6>
+                            <h6 class="text-sm text-gray-500 text-center mt-2">{{ $course->main_category }} <br> {{ $course->sub_category }}</h6>
 
-                            <div class="grid gap-6 my-2 md:grid-cols-2">
-                                <div class="flex items-center justify-center float-left">
 
-                                    <span class="text-sm font-mono text-gray-400">(12)</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-900 text-right">LKR {{ number_format($course->price, 2, ',', '.')  }}</h3>
+                            <div class="flex items-center justify-center text-yellow-600 mt-2">
+
+                                @php $stars = round($course->stars); @endphp
+
+                                @for($i=0; $i < 5; $i++) @php if($stars> 0){
+
+                                    @endphp
+                                    <i class="fa-solid fa-star"></i>
+                                    @php $stars--;
+                                    }else{
+                                    @endphp
+
+                                    <i class="fa-regular fa-star"></i>
+                                    @php } @endphp
+                                    @endfor
+
                             </div>
+                            <h3 class="text-lg font-bold text-gray-900 text-center mt-2">LKR {{ number_format($course->price, 2, ',', '.')  }}</h3>
+
 
                             <div class="grid gap-6 md:grid-cols-2">
-                                <h6 class="text-sm text-gray-700 mt-2">Status: <span class="text-blue-600">{{ $course->status }}</span></h6>
+                                <h6 class="text-sm text-gray-700 mt-2">Status:</h6>
 
                                 @if($course->isVerified == true)
                                 <h6 class="text-sm text-right text-green-700 mt-2"><i class="fa-regular fa-circle-check"></i> Verified</h6>
@@ -112,10 +125,10 @@
                             </div>
 
                             <div class="flex items-center mt-3">
-                                <button id="loginSubmit" type="button" class="py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
+                                <a href="/course/{{ $course->id }}" type="button" class="text-center py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-blue-700 hover:to-sky-400 transition duration-300 w-full">
                                     View
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

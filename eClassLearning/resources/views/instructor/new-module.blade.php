@@ -36,9 +36,9 @@ $title = "add new module";
 </div>
 
 @if($module == NULL)
-    <input type="text" id="moduleNo" name="moduleNo" value="0" hidden>
+<input type="text" id="moduleNo" name="moduleNo" value="0" hidden>
 @else
-    <input type="text" id="moduleNo" name="moduleNo" value="{{ $module->module_no }}" hidden>
+<input type="text" id="moduleNo" name="moduleNo" value="{{ $module->module_no }}" hidden>
 @endif
 
 <input type="text" id="courseId" name="courseId" value="{{ $course->id }}" hidden>

@@ -57,15 +57,11 @@
                                 <i class="fa-regular fa-star"></i>
                                 @php } @endphp
                                 @endfor
-                                <!-- <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star-half-stroke"></i>
-                             -->
                         </h3>
                     </div>
 
                     <div class="flex justify-center items-center mt-2">
-                        <a href="" type="button" class="py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
+                        <a href="/course/{{ $course->id }}" type="button" class="py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-blue-700 hover:to-sky-400 transition duration-300 w-full text-center">
                             View
                         </a>

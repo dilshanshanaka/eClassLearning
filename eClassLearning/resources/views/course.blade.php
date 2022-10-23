@@ -15,20 +15,26 @@
         <!-- Course Details Starts -->
         <div class="basis-1/2 pt-10 md:pr-10">
             <h2 class="text-gray-800 text-4xl font-bold">{{ $course->title }}</h2>
-            <h6 class="text-md text-gray-500 mt-3">{{ $course->mainCategory->title }} > {{ $course->subCategory->title }}</h6>
+            <h6 class="text-md text-gray-500 mt-3">{{ $course->main_category }} > {{ $course->sub_category }}</h6>
             @if($course->isVerified == true)
             <h3 class="text-md text-green-600 mt-2 font-semibold"><i class="fa-regular fa-circle-check"></i> eClassLearning Verified</h3>
             @endif
             <p class="mt-2 text-justify text-gray-700">{{ $course->description }}</p>
 
-            <div class="stars my-3">
-                <h3 class="text-yellow-500 text-md">
+            <div class="stars my-3 text-yellow-400">
+                @php $stars = round($course->stars); @endphp
+
+                @for($i=0; $i < 5; $i++) @php if($stars> 0){
+
+                    @endphp
                     <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-regular fa-star-half-stroke"></i>
+                    @php $stars--;
+                    }else{
+                    @endphp
+
                     <i class="fa-regular fa-star"></i>
-                </h3>
+                    @php } @endphp
+                    @endfor
             </div>
 
             <h6 class="text-md text-gray-600 mt-3">Duration : {{ $course->estimated_total_time }} hours </h6>
@@ -36,13 +42,22 @@
 
             <div class="my-3 grid gap-6 md:grid-cols-2">
                 <h3 class="text-2xl font-bold text-gray-800 text-left">LKR {{ number_format($course->price, 2, '.', ',')  }}</h3>
+                @guest
                 <div class="ml-auto">
-                    <button type="button" href="" type="button" class=" enroll text-center w-40 py-2 px-3 bg-gradient-to-r from-green-400 to-green-700 text-white rounded-md 
+                    <h1 class="text-lg uppercase font-bold text-purple-600">Login to Enroll</h1>
+                </div>
+
+                <button type="text" class="enroll" hidden>Hide</button>
+                @endguest
+
+                @auth
+                <div class="ml-auto">
+                    <button type="button" href="" type="button" class="enroll text-center w-40 py-2 px-3 bg-gradient-to-r from-green-400 to-green-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-green-700 hover:to-green-400 transition duration-300 ">
                         Buy Now
                     </button>
                 </div>
-
+                @endauth
             </div>
         </div>
         <!-- Course Details Ends -->
@@ -57,27 +72,28 @@
 
         <div class="px-10">
             <ol class="relative border-l border-gray-200">
+                <!-- <h1 class="text-lg uppercase font-bold text-gray-600 text-center my-4">No Modules available</h1> -->
+                @foreach($modules as $module)
+                <!-- Single Course Module Starts -->
                 <li class="mb-10 ml-4">
                     <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400">Chapter 01</time>
-                    <h3 class="text-lg font-semibold text-gray-900">Application UI code in Tailwind CSS</h3>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400">Module {{ $module->module_no }}</time>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ $module->title }}</h3>
 
-                    <ul class="list-disc ml-12 text-gray-600">
-                        <li>Now this is a story all about</li>
-                        <li>Now this is a story all</li>
-                    </ul>
-
-
+                    <h3 class="ml-8 text-gray-600 text-justify md:w-2/3">{{ $module->description }}</h3>
                 </li>
-                <li class="mb-10 ml-4">
-                    <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March 2022</time>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Marketing UI design in Figma</h3>
-                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.</p>
-                </li>
+                <!-- Single Course Module Ends -->
+                @endforeach
             </ol>
 
         </div>
+
+        <h3 class="my-8 text-gray-700 text-3xl font-bold">Recommended for you</h3>
+
+        <div class="flex space-x-6 mt-6" id="recommendations">
+
+        </div>
+
     </div>
 </div>
 
@@ -145,6 +161,8 @@
     const cancelButton = document.querySelector("button.cancel");
     const enrollModal = document.querySelector(".enroll-modal");
 
+    var courseTitle = $("#courseTitle").val();
+
     enrollButton.addEventListener("click", () => {
         enrollModal.classList.toggle("hidden");
     });
@@ -196,16 +214,49 @@
     });
 
 
+    // GET Recommentations from ML Model
     $.ajax({
         method: 'GET',
-        url: "http://127.0.0.1:5000/predict/The%20Analytics%20Edge",
-        headers: {
-            'X-CSRF-TOKEN': _token
-        },
+        url: "http://127.0.0.1:5000/predict/" + courseTitle,
+        crossDomain: true
     }).done(function(data) {
-        console.log(data);
         console.log(data.data);
-        console.log("working");
+        $.each(data.data, function(key, value) {
+            // GET Course Data by course title
+            $.ajax({
+                method: 'GET',
+                url: "/course/title/" + value
+            }).done(function(data) {
+            console.log(data);
+
+                // Append
+                var course = `<div class="basis-1/4 w-full max-w-sm bg-white rounded-xl shadow-lg">
+                        <a href="#">
+                            <img class="rounded-t-lg h-36 w-full" src="{{ asset('`+ data.image_path +`') }}" alt="course image">
+                        </a>
+                        <div class="px-3 py-4">
+                            <a href="">
+                                <h5 class="text-md font-bold tracking-tight text-gray-900">`+ data.title +`</h5>
+                            </a>
+
+                            <h6 class="text-sm text-gray-500 text-center mt-2">`+ data.main_category +` <br> `+ data.sub_category +`</h6>
+
+                            
+                                <h3 class="text-lg font-bold text-gray-900 my-2 text-center">LKR  `+ new Intl.NumberFormat('en-IN').format(data.price) +`</h3>
+                         
+                            <div class="flex items-center mt-3">
+                                <a href="/course/`+ data.id +`" type="button" class="text-center py-2 px-3 bg-gradient-to-r from-sky-400 to-sky-700 text-white rounded-md 
+                        shadow font-semibold bg hover:from-blue-700 hover:to-sky-400 transition duration-300 w-full">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
+                $("#recommendations").append(course);
+            });
+            console.log(value);
+        });
+
     });
 </script>
 

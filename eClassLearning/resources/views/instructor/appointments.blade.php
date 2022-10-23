@@ -127,9 +127,6 @@ $title = "appointments";
 
 
 @endif
-@foreach($appointments as $appointment)
-<h4>{{ $appointment->id }}</h4>
-@endforeach
 
 
 

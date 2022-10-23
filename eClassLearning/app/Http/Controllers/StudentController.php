@@ -13,6 +13,7 @@ use App\Models\Student;
 use App\Models\StudentEnrolment;
 use App\Models\Purchase;
 use App\Models\QuestionAnswer;
+use App\Models\Quiz;
 use App\Models\Review;
 use App\Models\StudentModule;
 use Illuminate\Support\Facades\Auth;
@@ -27,9 +28,22 @@ class StudentController extends Controller
 
         $student = Student::where('user_id', Auth::id())->first();
 
+        $totalCourses = DB::table('student_enrolments')->where('user_id', $userId)->count();
+        $totalAppointments = DB::table('appointments')->where('student_id', $student->id)->count();
+        $totalSales = DB::table('purchases')->where('student_id', $student->id)->sum('amount');
+
+        $purchases = Purchase::where('student_id', $student->id)->latest()->limit(2)->get();
+
+        $courses = DB::table('student_enrolments')
+            ->join('courses', 'courses.id', '=', 'student_enrolments.course_id')
+            ->select('courses.*')
+            ->where('student_enrolments.user_id', $userId)
+            ->limit(2)->get();
+
+
         $email = Auth::user()->email;
 
-        return view('student.dashboard', compact('email', 'student'));
+        return view('student.dashboard', compact('email', 'student', 'courses', 'purchases', 'totalAppointments' , 'totalCourses', 'totalSales'));
     }
 
     // Profile
@@ -323,17 +337,17 @@ class StudentController extends Controller
         $course = Course::where('id', $courseId)->first();
 
         $studentOngoingdModule = DB::table('student_module_progress')
-        ->select('student_module_progress.*')
-        ->where('course_id', $courseId)
-        ->where('status', "ongoing")
-        ->where('student_id', $student->id)
-        ->latest()->first()->module_id;
+            ->select('student_module_progress.*')
+            ->where('course_id', $courseId)
+            ->where('status', "ongoing")
+            ->where('student_id', $student->id)
+            ->latest()->first()->module_id;
 
-        if ($studentOngoingdModule == null) {
+        if ($studentOngoingdModule == null ) {
             $module = new StudentModule;
             $module->student_id = $student->id;
             $module->course_id = $courseId;
-            $module->module_id = 1;
+            $module->module_id = 3;
             $module->status = "ongoing";
             $module->save();
 
@@ -350,22 +364,24 @@ class StudentController extends Controller
         $email = Auth::user()->email;
 
         $modules = DB::table('modules')
-        ->leftJoin('quizzes', 'modules.id', '=', 'quizzes.module_id')
-        ->select(
-            'modules.*',
-            'quizzes.id as quiz',
-        )
-        ->where('modules.course_id', $courseId)
-        ->get();
+            ->leftJoin('quizzes', 'modules.id', '=', 'quizzes.module_id')
+            ->select(
+                'modules.*',
+                'quizzes.id as quiz',
+            )
+            ->where('modules.course_id', $courseId)
+            ->get();
 
 
         $course = Course::where('id', $courseId)->first();
 
         $pageModule = Module::where('module_no', $moduleNo)->where('course_id', $courseId)->first();
 
+        $moduleQuizId = Quiz::where('module_id', $pageModule->id)->first();
+
         $finalModule = Module::where('module_no', $moduleNo)->where('course_id', $courseId)->latest()->first()->module_no;
 
-        return view('student.content', compact('email', 'student', 'course', 'modules', 'pageModule', 'finalModule'));
+        return view('student.content', compact('email', 'student', 'course', 'modules', 'pageModule', 'finalModule', 'moduleQuizId'));
     }
 
     public function lastCompletedModule($courseId)
@@ -416,26 +432,25 @@ class StudentController extends Controller
         $course = Course::where('id', $courseId)->first();
 
         $modules = DB::table('modules')
-        ->leftJoin('quizzes', 'modules.id', '=', 'quizzes.module_id')
-        ->select(
-            'modules.*',
-            'quizzes.id as quiz',
-        )
-        ->where('modules.course_id', $courseId)
-        ->get();
+            ->leftJoin('quizzes', 'modules.id', '=', 'quizzes.module_id')
+            ->select(
+                'modules.*',
+                'quizzes.id as quiz',
+            )
+            ->where('modules.course_id', $courseId)
+            ->get();
 
         $quiz = DB::table('quizzes')
-        ->leftJoin('modules', 'quizzes.module_id', '=', 'modules.id')
-        ->select('quizzes.id', 'quizzes.type', 'modules.module_no')
-        ->where('quizzes.id', $quizId)
-        ->first();
+            ->leftJoin('modules', 'quizzes.module_id', '=', 'modules.id')
+            ->select('quizzes.id', 'quizzes.type', 'modules.module_no')
+            ->where('quizzes.id', $quizId)
+            ->first();
 
         $questions = QuestionAnswer::where('quiz_id', $quiz->id)->get();
 
         $finalModule = Module::where('module_no', $quiz->module_no)->where('course_id', $courseId)->latest()->first()->module_no;
 
         return view('student.quiz', compact('email', 'student', 'course', 'modules', 'finalModule', 'questions', 'quiz'));
-
     }
 
     public function moduleQuestions($quizId)

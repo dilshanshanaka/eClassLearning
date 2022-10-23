@@ -59,10 +59,13 @@
                 @php echo $pageModule->data; @endphp
 
                 <div class="mt-6 flex justify-end">
-                    <a type="button" href="#" class="mt-6 text-center py-2 px-5 bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-md 
+                    @if($module->quiz != null)
+                    <a type="button" href="{{ route('student.course.quiz', ['courseId'=>$course->id, 'id'=> $moduleQuizId]) }}" class="mt-6 text-center py-2 px-5 bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-sky-700 hover:to-sky-500">
                         Next
                     </a>
+                    @endif
+
                 </div>
             </div>
 

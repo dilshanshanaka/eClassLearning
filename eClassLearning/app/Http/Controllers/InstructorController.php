@@ -29,12 +29,14 @@ class InstructorController extends Controller
         // User Email
         $email = Auth::user()->email;
 
-        $courses = Course::where('instructor_id', $instructor->id)->latest()->get();
+        $totalCourses = DB::table('courses')->where('instructor_id', $instructor->id)->count();
+        $totalAppointments = DB::table('appointments')->where('instructor_id', $instructor->id)->count();
+        $totalSales = DB::table('purchases')->where('instructor_id', $instructor->id)->sum('amount');
 
-        $mainCategories = MainCategory::all();
-        $subCategories = SubCategory::all();
+        $purchases = Purchase::where('instructor_id', $instructor->id)->latest()->limit(2)->get();
+        $courses = Course::where('instructor_id', $instructor->id)->latest()->limit(2)->get();
 
-        return view('instructor.dashboard', compact('email', 'instructor', 'mainCategories', 'subCategories', 'courses'));
+        return view('instructor.dashboard', compact('email', 'instructor', 'courses', 'purchases', 'totalAppointments' , 'totalCourses', 'totalSales'));
     }
 
     // Profile
@@ -181,13 +183,6 @@ class InstructorController extends Controller
     }
 
 
-    // Update Quiz
-    public function updateQuiz()
-    {
-        //
-    }
-
-
     // Course Detailed View
     public function course($courseId)
     {
@@ -294,29 +289,36 @@ class InstructorController extends Controller
 
         $instructorAppointment = InstructorAppointment::where('instructor_id', $instructorId)->first();
 
+        if ($instructorAppointment == null) {
+            $instructorAppointment = null;
+            $slots = null;
+        } else {
+            $start = date('H:i', strtotime($instructorAppointment->start_time));
+            $end = $instructorAppointment->end_time;
+
+            $startTime = strtotime($start);
+            $endTime = strtotime($end);
+
+            $timefarme = $endTime - $startTime;
+
+            $timeSlots = $timefarme / 3600;
+
+            $slots = [];
+
+            for ($i =  1; $i <= $timeSlots; $i++) {
+                $time = strtotime($start) + 60 * 60;
+                $end = date('H:i', $time);
+
+                $slot = array("value" => $i, "start_time" => $start, "end_time" => $end);
+                array_push($slots, $slot);
+
+                $start = $end;
+            }
+        }
+
         $userRole = "guest";
 
-        $start = date('H:i', strtotime($instructorAppointment->start_time));
-        $end = $instructorAppointment->end_time;
 
-        $startTime = strtotime($start);
-        $endTime = strtotime($end);
-
-        $timefarme = $endTime - $startTime;
-
-        $timeSlots = $timefarme / 3600;
-
-        $slots = [];
-
-        for ($i =  1; $i <= $timeSlots; $i++) {
-            $time = strtotime($start) + 60 * 60;
-            $end = date('H:i', $time);
-
-            $slot = array("value" => $i, "start_time" => $start, "end_time" => $end);
-            array_push($slots, $slot);
-
-            $start = $end;
-        }
 
         if (Auth::check()) {
             $userRole = Auth::user()->role;
@@ -413,10 +415,10 @@ class InstructorController extends Controller
         $email = Auth::user()->email;
 
         $questions = DB::table('ask_questions')
-        ->join('courses', 'courses.id', '=', 'ask_questions.course_id')
-        ->select('ask_questions.*', 'courses.title')
-        ->where('courses.instructor_id', $instructor->id)
-        ->latest()->paginate(10);
+            ->join('courses', 'courses.id', '=', 'ask_questions.course_id')
+            ->select('ask_questions.*', 'courses.title')
+            ->where('courses.instructor_id', $instructor->id)
+            ->latest()->paginate(10);
 
         return view('instructor.questions', compact('email', 'instructor', 'questions'));
     }
@@ -427,10 +429,10 @@ class InstructorController extends Controller
         $email = Auth::user()->email;
 
         $question = DB::table('ask_questions')
-        ->join('courses', 'courses.id', '=', 'ask_questions.course_id')
-        ->select('ask_questions.*', 'courses.title')
-        ->where('ask_questions.id', $questionId)
-        ->first();
+            ->join('courses', 'courses.id', '=', 'ask_questions.course_id')
+            ->select('ask_questions.*', 'courses.title')
+            ->where('ask_questions.id', $questionId)
+            ->first();
 
         $student = Student::where('id', $question->student_id)->first();
 
@@ -457,5 +459,4 @@ class InstructorController extends Controller
 
         return response()->json(['data' => "Success"], 200);
     }
-    
 }

@@ -22,15 +22,17 @@
 
             <h4 class="text-md text-gray-800 font-semibold">{{ $instructor->city }}</h4>
             <h4 class="text-md text-gray-700 mt-3 pr-5 mb-5">{{ $instructor->bio }}</h4>
+            @if($instructorAppointment != NULL)
             @if($instructorAppointment->status == true)
             <h4 class="text-md text-gray-700 mt-3 pr-5 mb-3 font-semibold">Availability: <span class="text-green-600">available</span></h4>
             @else
             <h4 class="text-md text-gray-700 mt-3 pr-5 mb-1 font-semibold">Availability: unavailable</h4>
             @endif
-
+            @endif
 
             @if($userRole == "student")
-            @if($instructorAppointment->status == true)
+            @if($instructorAppointment != NULL)
+            @if($instructorAppointment->status == true )
             <h4 class="text-md text-gray-800 font-semibold">Charge Per Hour : LKR{{ $instructorAppointment->charge_per_hour }}</h4>
             @else
             <h4 class="text-md text-gray-800 font-semibold mt-3 pr-5 mb-5">Instructor unavailble for appointments.</h4>
@@ -38,9 +40,11 @@
             @else
             <h4 class="text-md text-gray-800 font-semibold mt-3 pr-5 mb-5">Login as a student to book an appointment.</h4>
             @endif
+            @endif
         </div>
     </div>
-
+    @auth
+    @if($instructorAppointment != NULL)
     @if($instructorAppointment->status == true)
     <hr class="my-1">
     <div class="flex space-x-8 mx-10">
@@ -59,11 +63,14 @@
     </div>
     <button type="button" id="addAppointment" class="mx-10 my-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center mt-3">Add New Appointment</button>
     @endif
+    <input type="text" hidden value="{{ $instructorAppointment->charge_per_hour }}" id="chargePerHour">
+    @endif
+    @endauth
 </div>
 
 
 <input type="text" hidden value="{{ $instructor->id }}" id="instructorId">
-<input type="text" hidden value="{{ $instructorAppointment->charge_per_hour }}" id="chargePerHour">
+
 
 <script>
     _token = $('meta[name="csrf-token"]').attr('content'); // CSRF Token

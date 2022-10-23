@@ -22,7 +22,7 @@ $title = "course";
         <h6 class="text-md text-gray-500 mt-3">{{ $course->mainCategory->title }} > {{ $course->subCategory->title }}</h6>
         <p class="mt-2 text-justify text-gray-700">{{ $course->description }}</p>
 
-        <a type="button" href="{{ route('student.course.module', ['courseId'=>$course->id, 'id'=> $studentOngoingdModule]) }}" class="mt-6 text-center py-2 px-3 bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-md 
+        <a type="button" href="{{ route('student.course.module', ['courseId'=>$course->id, 'id'=> 1]) }}" class="mt-6 text-center py-2 px-3 bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-md 
                         shadow font-semibold bg hover:from-sky-700 hover:to-sky-500">
             Continue
         </a>

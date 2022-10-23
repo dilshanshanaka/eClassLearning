@@ -35,7 +35,7 @@ class AdminController extends Controller
     // Get All Users
     public function allUsers()
     {
-        $users = User::select('id', 'email', 'role', 'status', 'created_at', 'updated_at')->paginate(3);
+        $users = User::select('id', 'email', 'role', 'status', 'created_at', 'updated_at')->paginate(10);
         $totalUsers = User::count();
 
         return view('admin.users', compact('users', 'totalUsers'));
