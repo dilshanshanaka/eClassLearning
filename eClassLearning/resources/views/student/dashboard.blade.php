@@ -17,10 +17,6 @@ $title = "dashboard";
         <h4 class="text-gray-800 text-2xl font-bold mb-2">Appointments</h4>
         <h4 class="text-gray-800 text-3xl font-bold">{{ $totalAppointments }}</h4>
     </div>
-    <div class="basis-1/4 text-center shadow-2xl rounded p-8">
-        <h4 class="text-gray-800 text-2xl font-bold mb-2">Sales</h4>
-        <h4 class="text-gray-800 text-xl font-bold">LKR {{ number_format($totalSales, 2, '.', ',') }} </h4>
-    </div>
 </div>
 
 
